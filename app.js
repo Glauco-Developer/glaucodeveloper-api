@@ -20,26 +20,23 @@ const pool = mysql.createPool({
 // Middleware para JSON
 app.use(express.json());
 
-// Rota para listar todos os dados da tabela `paginas`
+// Rota para listar os dados da tabela `paginas`
 app.get('/pages', async (req, res) => {
-  try {
-    const [rows] = await pool.query('SELECT * FROM pages');
-    res.json(rows); // Retorna os dados como JSON
-  } catch (error) {
-    res.status(500).json({ error: error.message }); // Retorna o erro em caso de falha
-  }
-});
+  const { url } = req.query; // Captura o parâmetro `url` da query string
 
-// Rota para buscar uma página pelo URL
-app.get('/pages/:url', async (req, res) => {
-  const { url } = req.params; // Captura o parâmetro `url` da rota
   try {
-    // Consulta para selecionar a página correspondente ao `url`
-    const [rows] = await pool.query('SELECT * FROM pages WHERE url = ?', [url]);
-    if (rows.length === 0) {
-      return res.status(404).json({ error: 'Página não encontrada' }); // Retorna 404 se não encontrar
+    if (url) {
+      // Consulta para buscar uma página específica pelo `url`
+      const [rows] = await pool.query('SELECT * FROM pages WHERE url = ?', [url]);
+      if (rows.length === 0) {
+        return res.status(404).json({ error: 'Página não encontrada' }); // Retorna 404 se não encontrar
+      }
+      res.json(rows[0]); // Retorna os dados da página encontrada
+    } else {
+      // Consulta para listar todas as páginas, caso `url` não seja fornecido
+      const [rows] = await pool.query('SELECT * FROM pages');
+      res.json(rows);
     }
-    res.json(rows[0]); // Retorna os dados da página encontrada
   } catch (error) {
     res.status(500).json({ error: error.message }); // Retorna o erro em caso de falha
   }
