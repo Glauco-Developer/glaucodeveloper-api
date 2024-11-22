@@ -20,11 +20,11 @@ const pool = mysql.createPool({
 // Middleware para JSON
 app.use(express.json());
 
-// Rota principal para listar os dados da tabela `paginas`
-app.get('/', async (req, res) => {
+// Rota para listar os dados da tabela `paginas`
+app.get('/pages', async (req, res) => {
   try {
     // Consulta para selecionar todos os dados da tabela `paginas`
-    const [rows] = await pool.query('SELECT * FROM pages');
+    const [rows] = await pool.query('SELECT * FROM paginas');
     res.json(rows); // Retorna os dados como JSON
   } catch (error) {
     res.status(500).json({ error: error.message }); // Retorna o erro em caso de falha
