@@ -24,7 +24,7 @@ app.use(express.json());
 app.get('/pages', async (req, res) => {
   try {
     // Consulta para selecionar todos os dados da tabela `paginas`
-    const [rows] = await pool.query('SELECT * FROM paginas');
+    const [rows] = await pool.query('SELECT * FROM pages');
     res.json(rows); // Retorna os dados como JSON
   } catch (error) {
     res.status(500).json({ error: error.message }); // Retorna o erro em caso de falha
